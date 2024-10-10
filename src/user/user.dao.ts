@@ -4,57 +4,31 @@ import { Profile } from '../profile/profile.model';
 import { Post } from '../post/post.model';
 import { Comment } from '../comment/comment.model';
 import { Sequelize } from 'sequelize-typescript';
-import { UserQueryDto } from './user.dto'; // Import DTO
-import { Op } from 'sequelize'; // Import untuk operator pencarian
+import { UserAttributeHelper } from './UserAttributeHelper';
 
 export class UserDao {
   constructor(
     @InjectModel(User) private readonly userModel: typeof User,
     @InjectModel(Profile) private readonly profileModel: typeof Profile,
-    private readonly sequelize: Sequelize, // Pastikan Sequelize di-inject
-  ) {}
-
+    private readonly sequelize: Sequelize, 
+  ) { }
   async getUsersWithProfiles(): Promise<User[]> {
     return this.userModel.findAll({
-      attributes: ['id', 'name', 'email', 'createdAt', 'updatedAt'],
-      include: [
-        {
-          model: Profile,
-          as: 'userProfiles',
-          attributes: ['id', 'bio', 'createdAt', 'updatedAt'],
-          required: false,
-        },
-      ],
+      attributes: UserAttributeHelper.getUserAttributes(),
+      include: UserAttributeHelper.getUserIncludes(this.sequelize),
     });
   }
 
   async getUsersWithPost(): Promise<User[]> {
     return this.userModel.findAll({
-      attributes: ['id', 'name', 'email', 'createdAt', 'updatedAt'],
-      include: [
-        {
-          model: Post,
-          as: 'posts',
-          attributes: ['id', 'title', 'content'],
-          required: false,
-        },
-      ],
+      attributes: UserAttributeHelper.getUserAttributes(),
+      include: UserAttributeHelper.getPostIncludes(this.sequelize),
     });
   }
 
   async getUsersWithProfileAndComments(): Promise<User[]> {
     return this.userModel.findAll({
-      include: [
-        {
-          model: Profile,
-          attributes: ['bio'],
-        },
-        {
-          model: Comment,
-          as: 'userComments',
-          attributes: ['content'],
-        },
-      ],
+      include: UserAttributeHelper.getUserProfileAndCommentsIncludes(this.sequelize),
     });
   }
 
@@ -70,7 +44,9 @@ export class UserDao {
   }
 
   async getAllUsers(): Promise<User[]> {
-    return this.userModel.findAll();
+    return this.userModel.findAll({
+      attributes: UserAttributeHelper.getUserAttributes(),
+    });
   }
 
   async getProfilesWithUsers(): Promise<Profile[]> {
@@ -78,40 +54,35 @@ export class UserDao {
       include: [
         {
           model: User,
+          attributes: UserAttributeHelper.getUserAttributes(),
           required: true,
         },
       ],
     });
   }
 
-  // Implementasi paginasi
-  async getUsersWithPagination(query: UserQueryDto): Promise<any> {
-    const page = parseInt(query.page as any, 10) || 1; // Konversi page ke integer, default ke 1 jika tidak ada
-    const limit = parseInt(query.limit as any, 10) || 10; // Konversi limit ke integer, default ke 10 jika tidak ada
+  async getUsersWithPagination(query: any, searchQuery: any): Promise<{ rows: User[], count: number, totalPages: number, currentPage: number, perPage: number }> {
+    const page = parseInt(query.page as any, 10) || 1;
+    const limit = parseInt(query.limit as any, 10) || 10;
     const offset = (page - 1) * limit;
-  
-    const whereClause = query.search
-      ? {
-          [Op.or]: [
-            { name: { [Op.iLike]: `%${query.search}%` } },
-            { email: { [Op.iLike]: `%${query.search}%` } },
-          ],
-        }
-      : {};
-  
-    const users = await this.userModel.findAndCountAll({
-      where: whereClause,
-      limit: limit,
-      offset: offset,
-      order: [['name', 'ASC']],
+
+    const { rows, count } = await this.userModel.findAndCountAll({
+      where: {
+        ...searchQuery, 
+      },
+      attributes: UserAttributeHelper.getUserAttributes(),
+      limit,
+      offset,
     });
-  
+
+    const totalPages = Math.ceil(count / limit);
+
     return {
-      totalRows: limit,
-      page: page, // Pastikan page disimpan sebagai integer
-      // totalPages: Math.ceil(users.count / limit),
-      rows: users.rows,
+      rows,
+      count,
+      totalPages,
+      currentPage: page,
+      perPage: limit,
     };
   }
-  
 }
