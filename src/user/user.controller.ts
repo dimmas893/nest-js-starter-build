@@ -1,21 +1,39 @@
-import { Controller, Get, Query, Res } from '@nestjs/common';
+import { Body, Controller, Get, Post, Res } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserQueryDto } from './user.dto'; // Import DTO
+import { UserQueryRequestBodyDto } from './user.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ResponseHelper } from '../common/helpers/response-helper';
+import { ResponseCode } from '../common/enums/response-code.enum';
+import { Response } from 'express';
 
 @ApiTags('Users')
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @Get('with-profile-comments')
   async getUsersWithProfileAndComments() {
     return this.userService.getUsersWithProfileAndComments();
   }
 
+  @ApiOperation({ summary: 'Get user with profile' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of user with profile',
+  })
   @Get('with-profile')
-  async getUsersWithProfiles() {
-    return this.userService.getUsersWithProfiles();
+  async getUsersWithProfiles(@Res() res: Response) {
+    try {
+      const data = await this.userService.getUsersWithProfiles();
+      return ResponseHelper.generate(res, ResponseCode.OK, { data: data });
+    } catch (error) {
+      return ResponseHelper.generate(
+        res,
+        ResponseCode.SERVER_GENERAL_ERROR,
+        null,
+        error.message
+      );
+    }
   }
 
   @Get('with-post')
@@ -28,29 +46,56 @@ export class UserController {
     return this.userService.getProfilesWithUsers();
   }
 
-  @Get()
-  async getAllUsers() {
-    return this.userService.getAllUsers();
-  }
 
-  @ApiOperation({ summary: 'Get paginated users' })
+  @ApiOperation({ summary: 'Get All users' })
   @ApiResponse({
     status: 200,
-    description: 'List of paginated users with search functionality',
+    description: 'List of All users with',
   })
-  @Get('/paginated')
-  async getUsersWithPagination(
-    @Query() query: UserQueryDto
-  ) {
-    const users = await this.userService.getUsersWithPagination(query);
+  @Get()
+  async getAllUsers(@Res() res: Response) {
+    try {
+      const data = await this.userService.getAllUsers();
+      return ResponseHelper.generate(res, ResponseCode.OK, { data: data });
+    } catch (error) {
+      return ResponseHelper.generate(
+        res,
+        ResponseCode.SERVER_GENERAL_ERROR,
+        null,
+        error.message
+      );
+    }
+  }
 
-    return {
-      responseResult: true,
-      message: 'Success',
-      data: {
-        ...users,
-        page: parseInt(users.page as any, 10), // Pastikan 'page' dikonversi menjadi integer
-      },
-    };
+  @ApiOperation({ summary: 'Get paginated users with search functionality using request body' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of paginated users with search',
+    type: UserQueryRequestBodyDto
+  })
+  @Post('paginated')
+  async getUsersWithPagination(
+    @Body() body: UserQueryRequestBodyDto,
+    @Res() res: Response
+  ) {
+    try {
+      const data = await this.userService.getUsersWithPaginationRequesBodyService(body);
+
+      return ResponseHelper.paginate(
+        res,
+        data.rows,
+        data.currentPage,
+        data.totalPages,
+        data.perPage,
+        data.count
+      );
+    } catch (error) {
+      return ResponseHelper.generate(
+        res,
+        ResponseCode.INVALID_FIELD_FORMAT,
+        {},
+        error.message
+      );
+    }
   }
 }
