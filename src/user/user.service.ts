@@ -1,10 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { UserDao } from './user.dao';
-import { UserQueryDto } from './user.dto'; // Pastikan DTO diimport
+import { UserQueryParamsDto, UserQueryRequestBodyDto } from './user.dto'; // Pastikan DTO diimport
+import { ResponseHelper } from 'src/common/helpers/response-helper';
+import { FormatHelper } from 'src/common/helpers/format-helper';
+import { LogHelper } from 'src/common/helpers/log-helper';
+import { SearchHelper } from 'src/common/helpers/search-helper';
+import { SearchValidation } from 'src/common/validations/search-validation';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userDao: UserDao) {}
+  constructor(private readonly userDao: UserDao) { }
 
   async getUsersWithProfiles(): Promise<any> {
     return this.userDao.getUsersWithProfiles();
@@ -22,15 +27,45 @@ export class UserService {
     return this.userDao.getUsersWithProfile();
   }
 
-  async getAllUsers(): Promise<any> {
-    return this.userDao.getAllUsers();
+  async getAllUsers() {
+    try {
+      const users = await this.userDao.getAllUsers();
+      // LogHelper.info('users', 'Successfully fetched all haha', { userCount: users.length, className: 'UserService', methodName: 'getAllUsers' }, 'json');
+      // LogHelper.info('users', 'Successfully fetched all haha', { userCount: users.length, className: 'UserService', methodName: 'getAllUsers' }, 'txt');
+      return users;
+    } catch (error) {
+      LogHelper.error('users', 'Failed to fetch all users', { className: 'UserService', methodName: 'getAllUsers' }, 'json');
+      throw error;
+    }
   }
 
   async getProfilesWithUsers(): Promise<any> {
     return this.userDao.getProfilesWithUsers();
   }
 
-  async getUsersWithPagination(query: UserQueryDto): Promise<any> {
-    return this.userDao.getUsersWithPagination(query);
+  async getUsersWithPaginationRequestParamsService(query: UserQueryParamsDto) {
+    const allowedFields = ['name', 'email', 'createdAt'];
+
+    const { isValid, errors } = SearchValidation.validateSearchFields(query, allowedFields);
+    if (!isValid) {
+      throw new Error(`Invalid search fields: ${errors.join(', ')}`);
+    }
+
+    const searchQuery = SearchHelper.buildSearchQuery(query, allowedFields);
+
+    return this.userDao.getUsersWithPagination(query, searchQuery);
+  }
+
+  async getUsersWithPaginationRequesBodyService(query: UserQueryRequestBodyDto) {
+    const allowedFields = ['name', 'email', 'createdAt'];
+
+    const { isValid, errors } = SearchValidation.validateSearchFields(query, allowedFields);
+    
+    if (!isValid) {
+      throw new Error(`Invalid search fields: ${errors.join(', ')}`);
+    }
+
+    const searchQuery = SearchHelper.buildSearchRequestBodyQuery(query, allowedFields);
+    return this.userDao.getUsersWithPagination(query, searchQuery);
   }
 }
