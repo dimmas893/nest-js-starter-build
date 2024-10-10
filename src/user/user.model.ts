@@ -1,4 +1,4 @@
-import { Table, Column, Model, DataType, HasMany } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, HasMany, HasOne } from 'sequelize-typescript';
 import { Profile } from '../profile/profile.model';
 import { Comment } from '../comment/comment.model';
 
@@ -32,11 +32,9 @@ export class User extends Model {
   })
   password: string;
 
-  // Relasi one-to-many (User memiliki banyak Profile)
-  @HasMany(() => Profile, { as: 'userProfiles' })
+  @HasOne(() => Profile, { as: 'userProfiles' })
   profiles: Profile[];
 
-  // Relasi one-to-many (User memiliki banyak Comment)
   @HasMany(() => Comment, { as: 'userComments' })
   comments: Comment[];
 }
