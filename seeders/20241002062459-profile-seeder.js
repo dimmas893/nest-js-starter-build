@@ -1,26 +1,30 @@
 'use strict';
+const { faker } = require('@faker-js/faker'); 
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkInsert('profiles', [
-      {
-        bio: 'This is John Doe\'s profile.',
-        avatarUrl: 'https://example.com/avatar/john.jpg',
-        userId: 1, // Sesuaikan dengan id user yang ada
+    const users = await queryInterface.sequelize.query(
+      `SELECT id FROM users;`, 
+      { type: queryInterface.sequelize.QueryTypes.SELECT }
+    );
+
+    let profiles = [];
+
+    users.forEach(user => {
+      profiles.push({
+        bio: faker.lorem.sentence(), 
+        avatarUrl: faker.image.avatar(), 
+        userId: user.id, 
         createdAt: new Date(),
         updatedAt: new Date(),
-      },
-      {
-        bio: 'This is Jane Doe\'s profile.',
-        avatarUrl: 'https://example.com/avatar/jane.jpg',
-        userId: 2, // Sesuaikan dengan id user yang ada
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    ], {});
+      });
+    });
+
+    await queryInterface.bulkInsert('profiles', profiles, {});
   },
 
   down: async (queryInterface, Sequelize) => {
+    // Hapus semua data dari tabel profiles
     await queryInterface.bulkDelete('profiles', null, {});
   },
 };

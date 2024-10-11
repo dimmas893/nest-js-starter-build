@@ -41,6 +41,8 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
+    // Hapus tabel yang memiliki foreign key terlebih dahulu
+    await queryInterface.dropTable('comments'); 
     await queryInterface.dropTable('posts');
   },
 };
