@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UserDao } from './user.dao';
-import { UserQueryParamsDto, UserQueryRequestBodyDto } from './user.dto'; // Pastikan DTO diimport
-import { ResponseHelper } from 'src/common/helpers/response-helper';
-import { FormatHelper } from 'src/common/helpers/format-helper';
+import { UserQueryParamsDto, UserQueryRequestBodyDto } from './user.dto';
 import { LogHelper } from 'src/common/helpers/log-helper';
 import { SearchHelper } from 'src/common/helpers/search-helper';
 import { SearchValidation } from 'src/common/validations/search-validation';
@@ -30,7 +28,7 @@ export class UserService {
   async getAllUsers() {
     try {
       const users = await this.userDao.getAllUsers();
-      // LogHelper.info('users', 'Successfully fetched all haha', { userCount: users.length, className: 'UserService', methodName: 'getAllUsers' }, 'json');
+      LogHelper.info('users', 'Successfully fetched all haha', { userCount: users.length, className: 'UserService', methodName: 'getAllUsers' }, 'txt');
       // LogHelper.info('users', 'Successfully fetched all haha', { userCount: users.length, className: 'UserService', methodName: 'getAllUsers' }, 'txt');
       return users;
     } catch (error) {

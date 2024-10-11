@@ -1,8 +1,6 @@
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from './user.model';
 import { Profile } from '../profile/profile.model';
-import { Post } from '../post/post.model';
-import { Comment } from '../comment/comment.model';
 import { Sequelize } from 'sequelize-typescript';
 import { UserAttributeHelper } from './UserAttributeHelper';
 
@@ -12,6 +10,7 @@ export class UserDao {
     @InjectModel(Profile) private readonly profileModel: typeof Profile,
     private readonly sequelize: Sequelize, 
   ) { }
+  
   async getUsersWithProfiles(): Promise<User[]> {
     return this.userModel.findAll({
       attributes: UserAttributeHelper.getUserAttributes(),
