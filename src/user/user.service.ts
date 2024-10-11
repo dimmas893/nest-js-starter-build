@@ -28,11 +28,11 @@ export class UserService {
   async getAllUsers() {
     try {
       const users = await this.userDao.getAllUsers();
-      LogHelper.info('users', 'Successfully fetched all haha', { userCount: users.length, className: 'UserService', methodName: 'getAllUsers' }, 'txt');
+      LogHelper.info('users', 'Successfully fetched all', { userCount: users.length, className: 'UserService', methodName: 'getAllUsers', data: users }, 'json');
       // LogHelper.info('users', 'Successfully fetched all haha', { userCount: users.length, className: 'UserService', methodName: 'getAllUsers' }, 'txt');
       return users;
     } catch (error) {
-      LogHelper.error('users', 'Failed to fetch all users', { className: 'UserService', methodName: 'getAllUsers' }, 'json');
+      // LogHelper.error('users', 'Failed to fetch all users', { className: 'UserService', methodName: 'getAllUsers' }, 'json');
       throw error;
     }
   }
