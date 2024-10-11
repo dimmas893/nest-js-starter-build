@@ -8,20 +8,23 @@ import { Comment } from './comment/comment.model'; // import entitas user
 import { Post } from './post/post.model'; // import entitas user
 import { PostModule } from './post/post.module';
 import { UserModule } from './user/user.module';
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 @Module({
   imports: [
     SequelizeModule.forRoot({
-      dialect: 'postgres', // ganti sesuai dengan database yang kamu pakai
-      host: 'localhost',
-      port: 5432,
-      username: 'root',
-      password: 'Anandadimmas,123',
-      database: 'nest',
-      models: [User,Profile,Comment,Post], // daftar model yang digunakan
-      autoLoadModels: true, // untuk memuat model secara otomatis
-      synchronize: false, // aktifkan sinkronisasi untuk development (jangan aktifkan di production)
-    }),
-    SequelizeModule.forFeature([User,Profile,Comment,Post]), // daftarkan model User
+      dialect: process.env.DB_DIALECT as any,
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT, 10), 
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME_DEV,
+      models: [User, Profile, Comment, Post],
+      autoLoadModels: true,
+      synchronize: false,
+    }),    
+    SequelizeModule.forFeature([User,Profile,Comment,Post]), 
     PostModule,
     UserModule
    ],
