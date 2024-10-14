@@ -2,7 +2,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { User } from '../model/user.model';
 import { Profile } from '../../profile/profile.model';
 import { Sequelize } from 'sequelize-typescript';
-import { UserAttributeHelper } from '../attribute/UserAttributeHelper';
+import { UserAttribute } from '../attribute/UserAttribute';
 
 export class UserDao {
   constructor(
@@ -13,21 +13,21 @@ export class UserDao {
   
   async getUsersWithProfiles(): Promise<User[]> {
     return this.userModel.findAll({
-      attributes: UserAttributeHelper.getUserAttributes(),
-      include: UserAttributeHelper.getUserIncludes(this.sequelize),
+      attributes: UserAttribute.getUserAttributes(),
+      include: UserAttribute.getUserIncludes(this.sequelize),
     });
   }
 
   async getUsersWithPost(): Promise<User[]> {
     return this.userModel.findAll({
-      attributes: UserAttributeHelper.getUserAttributes(),
-      include: UserAttributeHelper.getPostIncludes(this.sequelize),
+      attributes: UserAttribute.getUserAttributes(),
+      include: UserAttribute.getPostIncludes(this.sequelize),
     });
   }
 
   async getUsersWithProfileAndComments(): Promise<User[]> {
     return this.userModel.findAll({
-      include: UserAttributeHelper.getUserProfileAndCommentsIncludes(this.sequelize),
+      include: UserAttribute.getUserProfileAndCommentsIncludes(this.sequelize),
     });
   }
 
@@ -44,7 +44,7 @@ export class UserDao {
 
   async getAllUsers(): Promise<User[]> {
     return this.userModel.findAll({
-      attributes: UserAttributeHelper.getUserAttributes(),
+      attributes: UserAttribute.getUserAttributes(),
     });
   }
 
@@ -53,7 +53,7 @@ export class UserDao {
       include: [
         {
           model: User,
-          attributes: UserAttributeHelper.getUserAttributes(),
+          attributes: UserAttribute.getUserAttributes(),
           required: true,
         },
       ],
@@ -69,7 +69,7 @@ export class UserDao {
       where: {
         ...searchQuery, 
       },
-      attributes: UserAttributeHelper.getUserAttributes(),
+      attributes: UserAttribute.getUserAttributes(),
       limit,
       offset,
     });

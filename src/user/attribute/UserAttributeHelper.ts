@@ -3,7 +3,7 @@ import { Profile } from '../../profile/profile.model';
 import { Post } from '../../post/post.model';
 import { Comment } from '../../comment/comment.model';
 
-export class UserAttributeHelper {
+export class UserAttribute {
   static getUserAttributes() {
     return ['id', 'name', 'email', 'createdAt', 'updatedAt'];
   }
