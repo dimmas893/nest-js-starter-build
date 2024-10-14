@@ -10,7 +10,7 @@ export class LogRequestMiddleware implements NestMiddleware {
     const { method, originalUrl, headers, body } = req;
 
     // Log incoming request
-    LogHelper.info('request', 'Incoming Request', {
+    LogHelper.info('activity-log/request', 'Incoming Request', {
       requestId,
       method,
       path: originalUrl,
@@ -45,7 +45,7 @@ export class LogRequestMiddleware implements NestMiddleware {
       }
 
       // Log the response without trace_class and trace_line
-      LogHelper.info('response', 'Outgoing Response', {
+      LogHelper.info('activity-log/response', 'Outgoing Response', {
         requestId,
         statusCode: res.statusCode,
         statusMessage: res.statusMessage,
