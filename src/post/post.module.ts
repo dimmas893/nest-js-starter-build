@@ -4,7 +4,7 @@ import { PostController } from './post.controller';
 import { PostService } from './post.service';
 import { Post } from './post.model';
 import { Comment } from '../comment/comment.model';
-import { User } from '../user/user.model';
+import { User } from '../user/model/user.model';
 
 @Module({
   imports: [SequelizeModule.forFeature([Post, Comment, User])],

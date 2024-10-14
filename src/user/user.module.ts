@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { UserController } from './user.controller';
-import { UserService } from './user.service';
-import { UserDao } from './user.dao';
-import { User } from './user.model';
+import { UserController } from './controller/user.controller';
+import { UserService } from './service/user.service';
+import { UserDao } from './dao/user.dao';
+import { User } from './model/user.model';
 import { Profile } from '../profile/profile.model';
 import { Comment } from '../comment/comment.model';
 

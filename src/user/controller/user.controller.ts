@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Post, Res } from '@nestjs/common';
-import { UserService } from './user.service';
-import { UserQueryRequestBodyDto } from './user.dto';
+import { UserService } from '../service/user.service';
+import { UserQueryRequestBodyDto } from '../dto/user.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ResponseHelper } from '../common/helpers/response-helper';
-import { ResponseCode } from '../common/enums/response-code.enum';
+import { ResponseHelper } from '../../common/helpers/response-helper';
+import { ResponseCode } from '../../common/enums/response-code.enum';
 import { Response } from 'express';
 
 @ApiTags('Users')

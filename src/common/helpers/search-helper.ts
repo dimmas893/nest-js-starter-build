@@ -1,5 +1,5 @@
 import { Op } from "sequelize";
-import { UserQueryParamsDto, UserQueryRequestBodyDto } from "src/user/user.dto";
+import { UserQueryParamsDto, UserQueryRequestBodyDto } from "src/user/dto/user.dto";
 
 export class SearchHelper {
   static buildSearchQuery(query: UserQueryParamsDto, allowedFields: string[]): any {

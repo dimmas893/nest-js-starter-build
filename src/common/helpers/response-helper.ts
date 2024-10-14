@@ -10,13 +10,14 @@ export class ResponseHelper {
     data: any = {},
     message: string | null = null
   ) {
+    const status = parseInt(responseCode.toString().substring(0, 3), 10);
+
     const response = {
       response_code: responseCode,
-      response_message: message ?? getMessage(responseCode),
-      ...data,
+      response_message: message ?? getMessage(responseCode), 
+      ...data, 
     };
 
-    const status = parseInt(responseCode.toString().substring(0, 3), 10);
     return res.status(status).json(response);
   }
 
@@ -29,14 +30,15 @@ export class ResponseHelper {
     total: number,
     data: any = {}
   ) {
-    return res.json({
+    const paginationResponse = {
       items,
-      current_page: Math.max(1, currentPage),
-      last_page: Math.max(1, lastPage),
+      current_page: Math.max(1, currentPage), 
+      last_page: Math.max(1, lastPage), 
       per_page: perPage,
-      total, 
-      ...data,
-    });
+      total,
+      ...data, 
+    };
+
+    return res.status(200).json(paginationResponse);
   }
-  
 }

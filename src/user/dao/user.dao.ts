@@ -1,8 +1,8 @@
 import { InjectModel } from '@nestjs/sequelize';
-import { User } from './user.model';
-import { Profile } from '../profile/profile.model';
+import { User } from '../model/user.model';
+import { Profile } from '../../profile/profile.model';
 import { Sequelize } from 'sequelize-typescript';
-import { UserAttributeHelper } from './UserAttributeHelper';
+import { UserAttributeHelper } from '../UserAttributeHelper';
 
 export class UserDao {
   constructor(

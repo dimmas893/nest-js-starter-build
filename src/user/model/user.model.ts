@@ -1,6 +1,6 @@
 import { Table, Column, Model, DataType, HasMany, HasOne } from 'sequelize-typescript';
-import { Profile } from '../profile/profile.model';
-import { Comment } from '../comment/comment.model';
+import { Profile } from '../../profile/profile.model';
+import { Comment } from '../../comment/comment.model';
 
 @Table({
   tableName: 'users',

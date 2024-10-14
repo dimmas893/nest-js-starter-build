@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { User } from './user/user.model'; // import entitas user
+import { User } from './user/model/user.model'; // import entitas user
 import { Profile } from './profile/profile.model'; // import entitas user
 import { Comment } from './comment/comment.model'; // import entitas user
 import { Post } from './post/post.model'; // import entitas user

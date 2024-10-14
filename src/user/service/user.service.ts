@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { UserDao } from './user.dao';
-import { UserQueryParamsDto, UserQueryRequestBodyDto } from './user.dto';
+import { UserDao } from '../dao/user.dao';
+import { UserQueryParamsDto, UserQueryRequestBodyDto } from '../dto/user.dto';
 import { LogHelper } from 'src/common/helpers/log-helper';
 import { SearchHelper } from 'src/common/helpers/search-helper';
 import { SearchValidation } from 'src/common/validations/search-validation';

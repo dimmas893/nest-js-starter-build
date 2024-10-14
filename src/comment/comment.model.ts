@@ -1,6 +1,6 @@
 import { Table, Column, Model, DataType, ForeignKey, BelongsTo } from 'sequelize-typescript';
 import { Post } from '../post/post.model';
-import { User } from '../user/user.model';
+import { User } from '../user/model/user.model';
 
 @Table({
   tableName: 'comments',
