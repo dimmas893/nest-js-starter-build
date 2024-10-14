@@ -56,15 +56,38 @@ export class UserController {
   }
 
   @Get('with-post')
-  async getUsersWithPost() {
-    return this.userService.getUsersWithPost();
+  async getUsersWithPost(
+    @Res() res: Response
+  ) {
+    try {
+      const data = await this.userService.getUsersWithPost();
+      return ResponseHelper.generate(res, ResponseCode.OK, { data: data });
+    } catch (error) {
+      return ResponseHelper.generate(
+        res,
+        ResponseCode.SERVER_GENERAL_ERROR,
+        null,
+        error.message
+      );
+    }
   }
 
   @Get('profiles-with-users')
-  async getProfilesWithUsers() {
-    return this.userService.getProfilesWithUsers();
+  async getProfilesWithUsers(
+    @Res() res: Response
+  ) {
+    try {
+      const data = await this.userService.getProfilesWithUsers();
+      return ResponseHelper.generate(res, ResponseCode.OK, { data: data });
+    } catch (error) {
+      return ResponseHelper.generate(
+        res,
+        ResponseCode.SERVER_GENERAL_ERROR,
+        null,
+        error.message
+      );
+    }
   }
-
 
   @ApiOperation({ summary: 'Get All users' })
   @ApiResponse({

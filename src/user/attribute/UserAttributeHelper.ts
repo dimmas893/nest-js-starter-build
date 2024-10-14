@@ -1,7 +1,7 @@
 import { Sequelize } from 'sequelize-typescript';
-import { Profile } from '../profile/profile.model';
-import { Post } from '../post/post.model';
-import { Comment } from '../comment/comment.model';
+import { Profile } from '../../profile/profile.model';
+import { Post } from '../../post/post.model';
+import { Comment } from '../../comment/comment.model';
 
 export class UserAttributeHelper {
   static getUserAttributes() {
