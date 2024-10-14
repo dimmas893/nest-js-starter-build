@@ -2,7 +2,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { User } from '../model/user.model';
 import { Profile } from '../../profile/profile.model';
 import { Sequelize } from 'sequelize-typescript';
-import { UserAttribute } from '../attribute/UserAttribute';
+import { UserAttribute } from '../attribute/user.attribute';
 
 export class UserDao {
   constructor(

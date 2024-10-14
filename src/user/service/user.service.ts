@@ -17,7 +17,7 @@ export class UserService {
     return this.userDao.getUsersWithPost();
   }
 
-  async getUsersWithProfileAndComments(): Promise<any> {
+  async getUsersWithProfileAndCommentsService(): Promise<any> {
     return this.userDao.getUsersWithProfileAndComments();
   }
 
