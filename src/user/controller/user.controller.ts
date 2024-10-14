@@ -21,7 +21,7 @@ export class UserController {
     @Res() res: Response
   ) {
     try {
-      const data = await this.userService.getUsersWithProfileAndCommentsService();
+      const data = await this.userService.getUsersWithProfileAndComments();
       return ResponseHelper.generate(res, ResponseCode.OK, { data: data });
     } catch (error) {
       return ResponseHelper.generate(
